@@ -2,7 +2,7 @@
 
 > Um sistema corporativo focado em segurança logística, permitindo a gestão de empresas de transporte e a consulta em tempo real da situação operacional de motoristas.
 
-![Painel do Usuário](assets/screenshots/painel-usuario.png)
+![Painel do Usuário](assets/screenshots/dashboard.png)
 
 ## 📄 Sobre o Projeto
 
