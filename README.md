@@ -1,49 +1,111 @@
 # 🚚 Gestão de Frotas & Consulta de Motoristas
 
-> Um sistema corporativo focado em segurança logística, permitindo a gestão de empresas de transporte e a consulta em tempo real da situação operacional de motoristas.
+> Um sistema corporativo robusto focado em segurança logística e auditoria, permitindo a gestão de empresas de transporte e a validação em tempo real da situação operacional de motoristas.
 
-![Painel do Usuário](assets/screenshots/dashboard.png)
+---
 
-## 📄 Sobre o Projeto
+## 🎯 Objetivo e Problema
 
-Este projeto foi desenvolvido para atuar como uma camada de segurança e auditoria para operações logísticas. O sistema permite o cadastro de empresas parceiras e a validação do status de motoristas através de integrações com bases de dados de risco, garantindo que apenas profissionais habilitados realizem viagens.
+**O Problema:** Empresas de logística enfrentam riscos constantes ao contratar motoristas sem validação prévia. A falta de rastreabilidade e de um sistema centralizado para consulta de risco pode levar a sinistros, atrasos e falhas graves de segurança.
 
-O foco técnico desta aplicação está na **rastreabilidade** e **inteligência de dados**, mantendo um log rigoroso de acessos e exibindo métricas de avaliação de forma dinâmica.
+**A Solução:** Esta plataforma atua como um **Hub de Segurança Logística**. Ela centraliza o onboarding de transportadoras e oferece uma interface rápida para consulta de motoristas, integrando dados de diversas fontes para retornar um status de risco claro e acionável.
 
-### 🎯 Principais Funcionalidades
+---
 
-* **🚦 Consulta de Motoristas (Validação de Risco):**
-    * Retorno visual imediato baseado no código de situação (`situationCode`) do profissional:
-        * 🟢 **Verde - Liberado:** O motorista possui viagens liberadas e está apto.
-        * 🟡 **Amarelo - Administrativo:** Avisos ou pendências leves.
-        * 🔴 **Vermelho - Impedimento:** Bloqueio operacional crítico.
-* **🏢 Cadastro e Gestão de Empresas:**
-    * Onboarding de novas transportadoras e parceiros logísticos no ecossistema da plataforma.
-* **🛡️ Auditoria e Logs de Segurança:**
-    * Tabela de rastreamento de ações registrando Data/Hora, Usuário, Tipo, Ação e endereço IP.
-    * Interface com paginação dinâmica e seletor de quantidade de registros (10, 20, 50 ou 100 por página).
-* **📈 Analytics e Avaliações:**
-    * Dashboards gerados via `Chart.js` para visualização de avaliações de serviço em escala percentual (0 a 100%).
+## 🏗️ Arquitetura do Sistema
 
-## 🛠️ Stack Tecnológica
+O sistema segue princípios de **Clean Architecture** para garantir manutenibilidade e escalabilidade, separando regras de negócio de detalhes de infraestrutura.
 
-* **Frontend:** HTML5, CSS3, e ícones FontAwesome para identificação visual rápida em tabelas e status.
-* **Processamento e Gráficos:** JavaScript Vanilla e `Chart.js` para renderização de dados analíticos.
-* **Integração:** Consumo de APIs para validação de regras de negócio (status do motorista).
+```mermaid
+graph TD
+    UI[Frontend - Vanilla JS/Chart.js] --> API[Backend - Node.js/Express]
+    API --> UC[Use Cases: ConsultDriver, AuditLog]
+    UC --> Domain[Domain: Driver, Company Entities]
+    API --> Gateways[External API Gateways]
+    API --> DB[(In-Memory/Mock DB)]
+    
+    subgraph "Camadas de Segurança"
+    Auth[Auth Middleware]
+    Audit[Audit Logger]
+    end
+    
+    API -.-> Auth
+    API -.-> Audit
+```
+
+---
+
+## 🚀 Como Executar
+
+### 🛠️ Ambiente de Desenvolvimento
+Para rodar o projeto localmente para desenvolvimento:
+
+```bash
+# 1. Clone o repositório
+git clone https://github.com/seu-usuario/gestao-de-frotas.git
+
+# 2. Instale as dependências
+npm install
+
+# 3. Inicie o servidor em modo watch
+npm run dev
+```
+
+### 🐳 Ambiente de Produção (Docker)
+O projeto está pronto para ser containerizado, garantindo paridade entre ambientes.
+
+```bash
+# Sobe o ambiente completo (App + Monitoramento)
+docker-compose up -d --build
+```
+> O sistema ficará disponível em `http://localhost:3000`
+
+---
+
+## 📄 API & Documentação (Swagger)
+
+A API do sistema é documentada seguindo o padrão **OpenAPI 3.0**. Você pode acessar a interface do Swagger em: `/api-docs`
+
+### Exemplo de Request: Consulta de Motorista
+`GET /api/v1/drivers/consult/{cpf}`
+
+**Response (200 OK):**
+```json
+{
+  "id": "12345678900",
+  "name": "João Silva",
+  "situationCode": "GREEN",
+  "message": "Liberado para viagem",
+  "lastUpdate": "2024-02-26T12:00:00Z"
+}
+```
+
+---
+
+## 🧪 Testes e Qualidade
+
+Qualidade de código é prioridade. O projeto conta com testes automatizados cobrindo as principais regras de negócio.
+
+*   **Testes Unitários (Jest):** Validação de entidades e casos de uso.
+*   **Linting (ESLint):** Garantia de padrões de código consistentes.
+*   **GitHub Actions:** Pipeline de CI configurado para rodar build, testes e lint a cada Pull Request.
 
 ---
 
 ## 📸 Galeria do Sistema
 
-| Autenticação Segura | Gestão de Transportadoras |
+| Dashboard Geral | Validação de Risco |
 |:---:|:---:|
-| ![Login](assets/screenshots/login.png) | ![Cadastro de Empresa](assets/screenshots/cadastro_empresa.png) |
-| *Controle de acesso rigoroso para operadores do sistema.* | *Módulo de cadastro de empresas e parceiros logísticos.* |
+| ![Dashboard](assets/screenshots/dashboard.png) | ![Consulta Motorista](assets/screenshots/consulta-motorista.png) |
+| *Visão consolidada de métricas e performance.* | *Interface de consulta imediata de status.* |
 
-| Validação Operacional | Dashboard e Auditoria |
+| Gestão de Transportadoras | Auditoria e Logs |
 |:---:|:---:|
-| ![Consulta Motorista](assets/screenshots/consulta-motorista.png) | ![Painel Usuário](assets/screenshots/painel-usuario.png) |
-| *Consulta de status de risco do motorista em tempo real.* | *Painel analítico e tabela de logs com rastreamento de IP.* |
+| ![Cadastro de Empresa](assets/screenshots/cadastro_empresa.png) | ![Painel Usuário](assets/screenshots/painel-usuario.png) |
+| *Fluxo de onboarding de novos parceiros.* | *Rastreabilidade total via logs detalhados.* |
 
 ---
-**Nota Técnica:** Este é um repositório de portfólio. O código-fonte integral não está exposto publicamente por conter regras de negócio sensíveis e integrações proprietárias de segurança.
+
+> [!NOTE]  
+> **Nota Técnica:** Este é um repositório de portfólio. O código-fonte integral não está exposto publicamente por conter regras de negócio sensíveis e tokens de integração proprietários de segurança. No entanto, a estrutura e arquitetura aqui documentadas refletem com precisão a engenharia aplicada no sistema original.
+
