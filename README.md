@@ -51,20 +51,7 @@ npm install
 npm run dev
 ```
 
-### 🐳 Ambiente de Produção (Docker)
-O projeto está pronto para ser containerizado, garantindo paridade entre ambientes.
-
-```bash
-# Sobe o ambiente completo (App + Monitoramento)
-docker-compose up -d --build
-```
-> O sistema ficará disponível em `http://localhost:3000`
-
 ---
-
-## 📄 API & Documentação (Swagger)
-
-A API do sistema é documentada seguindo o padrão **OpenAPI 3.0**. Você pode acessar a interface do Swagger em: `/api-docs`
 
 ### Exemplo de Request: Consulta de Motorista
 `GET /api/v1/drivers/consult/{cpf}`
